@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import word.WordSet;
 
-public class RegisterService implements InitializingBean, DisposableBean {
+public class RegisterService {
 
     @Autowired
     private WordDao wordDao;
@@ -31,13 +31,11 @@ public class RegisterService implements InitializingBean, DisposableBean {
         this.wordDao = wordDao;
     }
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
+    public void initMethod() {
         System.out.println("빈이 생성됬어용");
     }
 
-    @Override
-    public void destroy() throws Exception {
+    public void destroyMethod() {
         System.out.println("빈이 소멸됬어요ㅠ");
     }
 }

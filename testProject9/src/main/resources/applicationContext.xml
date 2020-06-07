@@ -10,6 +10,8 @@
 
 	<bean id="wordDao" class="dao.WordDao"/>
 
-	<bean id="registerService" class="service.RegisterService" />
+	<bean id="registerService" class="service.RegisterService"
+		init-method="initMethod" destroy-method="destroyMethod"
+	/>
 
 </beans>
