@@ -4,11 +4,17 @@ import dao.WordDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import word.WordSet;
 
+import javax.annotation.Resource;
+
 public class RegisterService {
 
+    @Resource
     private WordDao wordDao;
 
-    @Autowired
+    public RegisterService() {
+
+    }
+
     public RegisterService(WordDao wordDao) {
         this.wordDao = wordDao;
     }
