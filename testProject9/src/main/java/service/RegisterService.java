@@ -1,23 +1,16 @@
 package service;
 
 import dao.WordDao;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import word.WordSet;
 
-public class RegisterService {
+public class RegisterService implements InitializingBean, DisposableBean {
 
     @Autowired
-    @Qualifier("usedDao")
     private WordDao wordDao;
-
-    public RegisterService() {
-
-    }
-
-    public RegisterService(WordDao wordDao) {
-        this.wordDao = wordDao;
-    }
 
     public void register(WordSet wordSet) {
         String wordKey = wordSet.getWordKey();
@@ -38,4 +31,13 @@ public class RegisterService {
         this.wordDao = wordDao;
     }
 
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        System.out.println("빈이 생성됬어용");
+    }
+
+    @Override
+    public void destroy() throws Exception {
+        System.out.println("빈이 소멸됬어요ㅠ");
+    }
 }

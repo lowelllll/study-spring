@@ -8,11 +8,7 @@
 
 	<context:annotation-config />
 
-	<bean id="wordDao3" class="dao.WordDao">
-		<qualifier value="usedDao"/>
-	</bean>
-	<bean id="wordDao1" class="dao.WordDao"/>
-	<bean id="wordDao2" class="dao.WordDao"/>
+	<bean id="wordDao" class="dao.WordDao"/>
 
 	<bean id="registerService" class="service.RegisterService" />
 
