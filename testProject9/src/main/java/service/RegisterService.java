@@ -9,8 +9,12 @@ import word.WordSet;
 
 public class RegisterService {
 
-    @Autowired
     private WordDao wordDao;
+
+    @Autowired
+    public RegisterService (WordDao wordDao) {
+        this.wordDao = wordDao;
+    }
 
     public void register(WordSet wordSet) {
         String wordKey = wordSet.getWordKey();
