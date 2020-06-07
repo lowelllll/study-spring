@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans 
+ http://www.springframework.org/schema/beans/spring-beans.xsd">
+		
+	<bean id = "databaseConfig" class = "config.DatabaseConfig">
+		<property name="url" value="localhost:4306"></property>
+		<property name="user" value="root"></property>
+		<property name="password" value="pass!!"></property>
+		
+		<property name="names">
+			<list>
+				<value>yejin</value>
+				<value>lowell</value>
+			</list>
+		</property>
+		
+		<property name="info">
+			<map>
+				<entry>
+					<key>
+						<value>mysql</value>
+					</key>
+					<value>
+						345
+					</value>
+				</entry>
+			</map>
+		</property>
+	</bean>		
+</beans>
