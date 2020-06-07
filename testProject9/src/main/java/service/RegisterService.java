@@ -2,13 +2,13 @@ package service;
 
 import dao.WordDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import word.WordSet;
-
-import javax.annotation.Resource;
 
 public class RegisterService {
 
-    @Resource
+    @Autowired
+    @Qualifier("usedDao")
     private WordDao wordDao;
 
     public RegisterService() {
