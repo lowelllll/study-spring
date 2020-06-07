@@ -1,10 +1,6 @@
 import config.Config;
-import config.DaoConfig;
-import config.ServiceConfig;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.support.GenericXmlApplicationContext;
 import service.RegisterService;
-
 import word.WordSet;
 
 public class Main {
@@ -18,7 +14,7 @@ public class Main {
                 "JSP는 HTML내에 자바 코드를 삽입하여 웹 서버에서 동적으로 웹 페이지를 생성하여 웹 브라우저에 돌려주는 언어이다.",
                 "스프링 프레임워크는 자바 플랫폼을 위한 오픈소스 애플리케이션 프레임워크로서 간단히 스프링이라고도 불린다."};
 
-        AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(DaoConfig.class, ServiceConfig.class);
+        AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(Config.class);
 
         RegisterService registerService = ctx.getBean("registerService", RegisterService.class);
         for (int i = 0; i < values.length; i++) {

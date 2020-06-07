@@ -1,20 +1,10 @@
 package config;
 
-import dao.WordDao;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import service.RegisterService;
+import org.springframework.context.annotation.Import;
 
 @Configuration
+@Import({DaoConfig.class, ServiceConfig.class})
 public class Config {
 
-    @Bean
-    public WordDao wordDao() {
-        return new WordDao();
-    }
-
-    @Bean
-    public RegisterService registerService() {
-        return new RegisterService(wordDao());
-    }
 }
