@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.lowell.member.dto.Member;
 import com.lowell.member.service.MemberService;
@@ -18,29 +19,18 @@ public class MemberController {
 	MemberService service;
 	
 	@RequestMapping(value="/memJoin", method=RequestMethod.POST)
-	public String memJoin(Model model, HttpServletRequest request) {
-		String memId = request.getParameter("memId");
-		String memPw = request.getParameter("memPw");
-		String memMail = request.getParameter("memMail");
-		String memPhone1 = request.getParameter("memPhone1");
-		String memPhone2 = request.getParameter("memPhone2");
-		String memPhone3 = request.getParameter("memPhone3");
+	public String memJoin(Member member) {
 		
-		service.memberRegister(memId, memPw, memMail, memPhone1, memPhone2, memPhone3);
+		service.memberRegister(member.getMemId(), member.getMemPw(), member.getMemMail(), 
+				member.getMemPhone1(), member.getMemPhone2(), member.getMemPhone3());
 		
-		model.addAttribute("memId", memId);
-		model.addAttribute("memPw", memPw);
-		model.addAttribute("memMail", memMail);
-		model.addAttribute("memPhone", memPhone1 + " - " + memPhone2 + " - " + memPhone3);
 		
 		return "memJoinOk";
 	}
 	
 	@RequestMapping(value="/memLogin", method=RequestMethod.POST)
-	public String memLogin(Model model, HttpServletRequest request) {
-		
-		String memId = request.getParameter("memId");
-		String memPw = request.getParameter("memPw");
+	public String memLogin(Model model, @RequestParam("memId") String memId, 
+			@RequestParam(value="memPw", required=true) String memPw) {
 		
 		Member member = service.memberSearch(memId, memPw);
 		
