@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.lowell.member.dto.Member;
 import com.lowell.member.service.MemberService;
@@ -30,20 +31,23 @@ public class MemberController {
 	}
 	
 	@RequestMapping(value="/memLogin", method=RequestMethod.POST)
-	public String memLogin(Model model, @RequestParam("memId") String memId, 
+	public ModelAndView memLogin(@RequestParam("memId") String memId, 
 			@RequestParam(value="memPw", required=true) String memPw) {
 		
 		Member member = service.memberSearch(memId, memPw);
 		
+		ModelAndView modelAndView = new ModelAndView();
+		
 		try {
-			model.addAttribute("memId", member.getMemId());
-			model.addAttribute("memPw", member.getMemPw());
+			modelAndView.addObject("memId", member.getMemId());
+			modelAndView.addObject("memPw", member.getMemPw());
+			modelAndView.setViewName("memLoginOk");
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		
-		return "memLoginOk";
+		return modelAndView;
 	}
 	
 }
