@@ -9,6 +9,8 @@ import java.sql.SQLException;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import com.mchange.v2.c3p0.DriverManagerDataSource;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
@@ -19,28 +21,11 @@ import com.bs.lec23.member.Member;
 @Repository
 public class MemberDao implements IMemberDao {
 
-	private String driver = "com.mysql.cj.jdbc.Driver";
-	private String url = "jdbc:mysql://localhost/lowell?characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false";
-	private String userid = "root";
-	private String userpw = "lowell";
-
-	private ComboPooledDataSource dataSource;
 	private JdbcTemplate template;
 
-	public MemberDao() {
-		dataSource = new ComboPooledDataSource();
-
-		try {
-			dataSource.setDriverClass(driver);
-			dataSource.setJdbcUrl(url);
-			dataSource.setUser(userid);
-			dataSource.setPassword(userpw);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		template = new JdbcTemplate();
-		template.setDataSource(dataSource);
+	@Autowired
+	public MemberDao(ComboPooledDataSource dataSource) {
+		template = new JdbcTemplate(dataSource);
 	}
 
 	@Override
