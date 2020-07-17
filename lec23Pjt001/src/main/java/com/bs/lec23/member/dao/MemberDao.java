@@ -6,6 +6,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.mchange.v2.c3p0.DriverManagerDataSource;
+import java.util.List;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementSetter;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.bs.lec23.member.Member;
@@ -17,151 +22,67 @@ public class MemberDao implements IMemberDao {
 	private String url = "jdbc:mysql://localhost/lowell?characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false";
 	private String userid = "root";
 	private String userpw = "";
-	
-	private Connection conn = null;
-	private PreparedStatement pstmt = null;
-	private ResultSet rs = null;
-	
+
+	private DriverManagerDataSource dataSource;
+	private JdbcTemplate template;
+
+	public MemberDao() {
+		dataSource = new DriverManagerDataSource();
+		dataSource.setDriverClass(driver);
+		dataSource.setJdbcUrl(url);
+		dataSource.setUser(userid);
+		dataSource.setPassword(userpw);
+
+		template = new JdbcTemplate();
+		template.setDataSource(dataSource);
+	}
+
 	@Override
 	public int memberInsert(Member member) {
-		
-		int result = 0;
-		
-		try {
-			Class.forName(driver);
-			conn = DriverManager.getConnection(url, userid, userpw);
-			String sql = "INSERT INTO member (memId, memPw, memMail) values (?,?,?)";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, member.getMemId());
-			pstmt.setString(2, member.getMemPw());
-			pstmt.setString(3, member.getMemMail());
-			result = pstmt.executeUpdate();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if(pstmt != null) pstmt.close();
-				if(conn != null) conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		return result;
-		
+		String sql = "INSERT INTO member (memId, memPw, memMail) values (?,?,?)";
+
+		return template.update(sql, member.getMemId(), member.getMemPw(), member.getMemMail());
 	}
 
 	@Override
 	public Member memberSelect(Member member) {
 		
-		Member mem = null;
-		
-		try {
-			
-			Class.forName(driver);
-			conn = DriverManager.getConnection(url, userid, userpw);
-			String sql = "SELECT * FROM member WHERE memId = ? AND memPw = ?";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, member.getMemId());
-			pstmt.setString(2, member.getMemPw());
-			rs = pstmt.executeQuery();
-			
-			while (rs.next()) {
-				String memId = rs.getString("memid");
-				String memPw = rs.getString("mempw");
-				String memMail = rs.getString("memMail");
-				int memPurchaseNum = rs.getInt("memPurchaseNum");
-				
-				mem = new Member();
-				mem.setMemId(memId);
-				mem.setMemPw(memPw);
-				mem.setMemMail(memMail);
-				mem.setMemPurchaseNum(memPurchaseNum);
+		List<Member> members = null;
+		final String sql = "SELECT * FROM member WHERE memId = ? AND memPw = ?";
+
+		members = template.query(sql, new PreparedStatementSetter() {
+			@Override
+			public void setValues(PreparedStatement pstmt) throws SQLException {
+				pstmt.setString(1, member.getMemId());
+				pstmt.setString(2, member.getMemPw());
 			}
-			
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if(rs != null) rs.close();
-				if(pstmt != null) pstmt.close();
-				if(conn != null) conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
+		}, new RowMapper<Member>() {
+			@Override
+			public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
+				Member mem = new Member();
+				mem.setMemId(rs.getString("memId"));
+				mem.setMemPw(rs.getString("memPw"));
+				mem.setMemMail(rs.getString("memMail"));
+				mem.setMemPurchaseNum(rs.getInt("memPurchaseNum"));
+				return mem;
 			}
-		}
-		
-		return mem;
-		
+		});
+
+		if (members.isEmpty()) return null;
+
+		return members.get(0);
 	}
 
 	@Override
 	public int memberUpdate(Member member) {
-		
-		int result = 0;
-		
-		try {
-			
-			Class.forName(driver);
-			conn = DriverManager.getConnection(url, userid, userpw);
-			String sql = "UPDATE member SET memPw = ?, memMail = ? WHERE memId = ?";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, member.getMemPw());
-			pstmt.setString(2, member.getMemMail());
-			pstmt.setString(3, member.getMemId());
-			result = pstmt.executeUpdate();
-			
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if(pstmt != null) pstmt.close();
-				if(conn != null) conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		return result;
-		
+		String sql = "UPDATE member SET memPw = ?, memMail = ? WHERE memId = ?";
+		return template.update(sql, member.getMemPw(), member.getMemMail(), member.getMemId());
 	}
 
 	@Override
 	public int memberDelete(Member member) {
-		
-		int result = 0;
-		
-		try {
-			
-			Class.forName(driver);
-			conn = DriverManager.getConnection(url, userid, userpw);
-			String sql = "DELETE member WHERE memId = ? AND memPw = ?";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, member.getMemId());
-			pstmt.setString(2, member.getMemPw());
-			result = pstmt.executeUpdate();
-			
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if(pstmt != null) pstmt.close();
-				if(conn != null) conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		return result;
-		
+		String sql = "DELETE member WHERE memId = ? AND memPw = ?";
+		return template.update(sql, member.getMemId(), member.getMemPw());
 	}
 
 }
