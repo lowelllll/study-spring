@@ -16,27 +16,22 @@ public class AppCtx {
 
     @Bean
     public MemberRegisterService memberRegisterService() {
-        return new MemberRegisterService(memberDao);
+        return new MemberRegisterService();
     }
 
     @Bean
     public ChangePasswordService changePasswordService() {
-        ChangePasswordService changePasswordService = new ChangePasswordService();
-        changePasswordService.setMemberDao(memberDao);
-        return changePasswordService;
+        return new ChangePasswordService();
     }
 
     @Bean
     public MemberListPrinter listPrinter() {
-        return new MemberListPrinter(memberDao, memberPrinter);
+        return new MemberListPrinter();
     }
 
     @Bean
     public MemberInfoPrinter infoPrinter() {
-        MemberInfoPrinter infoPrinter = new MemberInfoPrinter();
-        infoPrinter.setMemberDao(memberDao);
-        infoPrinter.setPrinter(memberPrinter);
-        return infoPrinter;
+        return new MemberInfoPrinter();
     }
 
     @Bean
