@@ -1,12 +1,10 @@
 package spring;
 
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 
@@ -22,18 +20,15 @@ public class MemberDao {
     public Member selectByEmail(String email) {
         List<Member> results = jdbcTemplate.query(
                 "select * from member where email = ?",
-                new RowMapper<Member>() {
-                    @Override
-                    public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        Member member = new Member(
-                                rs.getString("email"),
-                                rs.getString("password"),
-                                rs.getString("name"),
-                                rs.getTimestamp("registered_at").toLocalDateTime()
-                        );
-                        member.setId(rs.getLong("id"));
-                        return member;
-                    }
+                (ResultSet rs, int rowNum) -> {
+                    Member member = new Member(
+                            rs.getString("email"),
+                            rs.getString("password"),
+                            rs.getString("name"),
+                            rs.getTimestamp("registered_at").toLocalDateTime()
+                    );
+                    member.setId(rs.getLong("id"));
+                    return member;
                 },
                 email
         );
@@ -47,6 +42,18 @@ public class MemberDao {
     }
 
     public Collection<Member> selectAll() {
-        return null;
+        return jdbcTemplate.query(
+                "select * from member",
+                (ResultSet rs, int rowNum) -> {
+                    Member member = new Member(
+                            rs.getString("email"),
+                            rs.getString("password"),
+                            rs.getString("name"),
+                            rs.getTimestamp("registered_at").toLocalDateTime()
+                    );
+                    member.setId(rs.getLong("id"));
+                    return member;
+                }
+        );
     }
 }
