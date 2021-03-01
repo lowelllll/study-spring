@@ -56,4 +56,10 @@ public class MemberDao {
                 }
         );
     }
+
+    public int count() {
+        return jdbcTemplate.queryForObject("select count(*) from member", Integer.class);
+    }
+
+
 }
