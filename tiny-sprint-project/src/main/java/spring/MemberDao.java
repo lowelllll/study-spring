@@ -1,10 +1,13 @@
 package spring;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.Collection;
 import java.util.List;
 
@@ -36,9 +39,32 @@ public class MemberDao {
     }
 
     public void insert(Member member) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+                PreparedStatement preparedStatement = connection.prepareStatement(
+                        "insert into member (email, name, password, registered_at) values (?, ?, ?, ?)",
+                        new String[]{"id"}
+                );
+                preparedStatement.setString(1, member.getEmail());
+                preparedStatement.setString(2, member.getName());
+                preparedStatement.setString(3, member.getPassword());
+                preparedStatement.setTimestamp(4, Timestamp.valueOf(member.getRegisterDateTime()));
+                return preparedStatement;
+            }
+        }, keyHolder);
+        Number keyValue = keyHolder.getKey();
+        member.setId(keyValue.longValue());
     }
 
     public void update(Member member) {
+        jdbcTemplate.update(
+                "update member set name = ?, password = ? where email = ?",
+                member.getName(),
+                member.getPassword(),
+                member.getEmail()
+        );
     }
 
     public Collection<Member> selectAll() {

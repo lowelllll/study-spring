@@ -65,8 +65,8 @@ public class MainForSpring {
         }
 
         try {
-            registerService.register(request);
-            System.out.println("등록했습니다");
+            long id = registerService.register(request);
+            System.out.println("등록했습니다 회원 ID: " + id);
         } catch (DuplicateMemberException e) {
             System.out.println("이미 존재하는 이메일입니다");
         }
