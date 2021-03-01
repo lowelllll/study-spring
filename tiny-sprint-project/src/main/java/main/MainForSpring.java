@@ -2,6 +2,7 @@ package main;
 
 import config.AppConfig;
 import config.AppCtx;
+import config.DbConfig;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import spring.*;
@@ -15,7 +16,7 @@ public class MainForSpring {
     private static ApplicationContext ctx = null;
 
     public static void main(String[] args) throws IOException {
-        ctx = new AnnotationConfigApplicationContext(AppConfig.class, AppCtx.class);
+        ctx = new AnnotationConfigApplicationContext(AppConfig.class, AppCtx.class, DbConfig.class);
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
