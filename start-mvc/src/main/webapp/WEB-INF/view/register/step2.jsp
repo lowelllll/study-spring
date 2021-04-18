@@ -18,18 +18,22 @@
     <p>
         <label><spring:message code="email"/>:</label>
         <form:input path="email"/>
+        <form:errors path="email"/>
     </p>
     <p>
         <label><spring:message code="name"/>:</label>
         <form:input path="name"/>
+        <form:errors path="name"/>
     </p>
     <p>
         <label><spring:message code="password"/>:</label>
         <form:password path="password"/>
+        <form:errors path="password"/>
     </p>
     <p>
         <label><spring:message code="password.confirm"/>:</label>
         <form:password path="confirmPassword"/>
+        <form:errors path="confirmPassword"/>
     </p>
     <input type="submit" value="<spring:message code="register.btn"/>">
 </form:form>
